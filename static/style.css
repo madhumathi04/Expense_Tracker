@@ -1,0 +1,255 @@
+.body {
+    background-color: #FDF7F4;
+}
+
+.registration_form h2 {
+    text-align: center;
+}
+
+.registration_form {
+    margin-top: 100px;
+    font-size: 30px;
+    background-color: #D7D3BF;
+    padding: 1rem;
+    width: 600px;
+    height: 510px;
+    margin-left: 460px;
+    border-radius: 2rem;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    flex: 1;
+    text-align: right;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.form-group input {
+    flex: 2;
+    padding: 7px;
+    height: 40px;
+    border: 1px solid #040202;
+    border-radius: 2rem;
+    font-size: 14px;
+}
+
+.form-group input::placeholder {
+    text-align: center;
+}
+
+.submit-button {
+    width: 90px;
+    height: 40px;
+    text-align: center;
+    margin-left: 260px;
+    color: black;
+    background-color: #F9C0AB;
+    border: 1px solid black;
+    border-radius: 2rem;
+    font-weight: bold;
+}
+
+.form-toggle {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.form-toggle .link-button {
+    background: none;
+    border: none;
+    color: #007BFF;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.form-toggle .link-button:hover {
+    color: #0056b3;
+}
+
+.expense_tracker {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.expense_tracker h2 {
+    margin-bottom: 20px;
+}
+
+.input-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.input-row input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.submit-button1 {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submit-button1:hover {
+    background-color: #b60000;
+}
+
+/* General styles for the table section */
+.expense_table {
+    margin: 20px;
+    padding: 15px;
+    border: 2px solid #4CAF50;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Table styling */
+#expenseTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-family: Arial, sans-serif;
+}
+
+#expenseTable th, #expenseTable td {
+    text-align: left;
+    padding: 12px;
+}
+
+#expenseTable th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+#expenseTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#expenseTable tr:hover {
+    background-color: #d6f5d6;
+    cursor: pointer;
+}
+
+/* Button styling in the action column */
+.expense_table button {
+    background-color: #ff6666;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.expense_table button:hover {
+    background-color: #cc0000;
+}
+
+/* Date-Based Expense Tables */
+.expense_tables_by_date {
+    margin: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.expense_tables_by_date h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.date-filter {
+    margin-bottom: 20px;
+}
+
+.date-filter label {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.date-filter select {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.date-expense-table {
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.date-expense-table h3 {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    margin: 0;
+    font-size: 18px;
+}
+
+.date-expense-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+.date-expense-table th, .date-expense-table td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.date-expense-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.date-expense-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.date-expense-table tr:hover {
+    background-color: #d6f5d6;
+    cursor: pointer;
+}
+
+.date-expense-table tfoot tr {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.date-expense-table tfoot td {
+    text-align: right;
+    padding: 10px 15px;
+}

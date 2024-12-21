@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <title>Expense Tracker</title>
+</head>
+
+<body>
+    <section class="expense_tracker">
+        <form id="expense-form">
+            {% csrf_token %}
+            <h2>Expense Tracker</h2>
+            <div class="input-row">
+                <input type="text" name="name" placeholder="Expense Name" required>
+                <input type="number" name="amount" placeholder="Amount" required>
+                <input type="text" name="category" placeholder="Category" required>
+                <input type="date" name="date">
+                <button type="submit" class="submit-button1">Add Expense</button>
+            </div>
+        </form>
+    </section>
+    <section class="expense_table">
+        <h2>Expense List</h2>
+        <table id="expenseTable">
+            <thead>
+                <tr>
+                    <th>Expense Name</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.name }}</td>
+                    <td>{{ expense.amount }}</td>
+                    <td>{{ expense.category }}</td>
+                    <td>{{ expense.date }}</td>
+                    <td>
+                        <button class="delete-button" data-id="{{ expense.id }}">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" style="text-align: right;">Total Expenses:</td>
+                    <td id="totalExpenses">₹0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+
+    <!-- New Section for Date-Based Expense Tables -->
+    <section class="expense_tables_by_date">
+        <h2>Expenses by Date</h2>
+        <!-- Date Filter Dropdown -->
+        <div class="date-filter">
+            <label for="dateFilter">Filter by Date:</label>
+            <select id="dateFilter">
+                <option value="">All Dates</option>
+                <!-- Options will be dynamically added here -->
+            </select>
+        </div>
+        <div id="dateExpenseTables">
+            <!-- Tables for each date will be dynamically added here -->
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Calculate total expenses
+            let totalExpenses = 0;
+            document.querySelectorAll('#expenseTable tbody tr').forEach(row => {
+                const amount = parseFloat(row.children[1].textContent);
+                if (!isNaN(amount)) {
+                    totalExpenses += amount;
+                }
+            });
+            document.getElementById('totalExpenses').textContent = `₹${totalExpenses.toFixed(2)}`;
+
+            // Group expenses by date
+            const expensesByDate = {};
+            document.querySelectorAll('#expenseTable tbody tr').forEach(row => {
+                const date = row.children[3].textContent;
+                const amount = parseFloat(row.children[1].textContent);
+                const name = row.children[0].textContent;
+                const category = row.children[2].textContent;
+                const expenseId = row.children[4].querySelector('.delete-button').getAttribute('data-id');
+
+                if (!isNaN(amount)) {
+                    if (!expensesByDate[date]) {
+                        expensesByDate[date] = {
+                            total: 0,
+                            expenses: []
+                        };
+                    }
+                    expensesByDate[date].total += amount;
+                    expensesByDate[date].expenses.push({ name, amount, category, expenseId });
+                }
+            });
+
+            // Render tables for each date
+            const dateExpenseTables = document.getElementById('dateExpenseTables');
+            const dateFilter = document.getElementById('dateFilter');
+            dateExpenseTables.innerHTML = ''; // Clear previous tables
+            dateFilter.innerHTML = '<option value="">All Dates</option>'; // Clear previous options
+
+            for (const [date, data] of Object.entries(expensesByDate)) {
+                // Add date to the filter dropdown
+                const option = document.createElement('option');
+                option.value = date;
+                option.textContent = date;
+                dateFilter.appendChild(option);
+
+                // Create table for the date
+                const tableContainer = document.createElement('div');
+                tableContainer.className = 'date-expense-table';
+                tableContainer.style.display = 'none'; // Initially hide all tables
+                tableContainer.innerHTML = `
+                    <h3>Date: ${date}</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Expense Name</th>
+                                <th>Amount</th>
+                                <th>Category</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.expenses.map(expense => `
+                                <tr>
+                                    <td>${expense.name}</td>
+                                    <td>₹${expense.amount.toFixed(2)}</td>
+                                    <td>${expense.category}</td>
+                                    <td>
+                                        <button class="delete-button" data-id="${expense.expenseId}">Delete</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" style="text-align: right;">Total Expenses for ${date}:</td>
+                                <td>₹${data.total.toFixed(2)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                `;
+                dateExpenseTables.appendChild(tableContainer);
+            }
+
+            // Show/hide tables based on the selected date
+            dateFilter.addEventListener('change', function () {
+                const selectedDate = this.value;
+                document.querySelectorAll('.date-expense-table').forEach(table => {
+                    if (selectedDate === '' || table.querySelector('h3').textContent.includes(selectedDate)) {
+                        table.style.display = 'block';
+                    } else {
+                        table.style.display = 'none';
+                    }
+                });
+            });
+
+            // Handle form submission (add event listener only once)
+            const expenseForm = document.getElementById('expense-form');
+            expenseForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+                fetch('{% url "homepage" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert(data.message);
+                        }
+                    });
+            });
+
+            // Handle delete button click (add event listener only once)
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    var expenseId = this.getAttribute('data-id');
+                    fetch(`/delete_expense/${expenseId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                location.reload();
+                            } else {
+                                alert(data.message);
+                            }
+                        });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
